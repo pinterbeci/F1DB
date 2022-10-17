@@ -15,6 +15,12 @@ public class Race {
     public Race() {
     }
 
+    public Race(String gpName, int numberOfCurrentGP, int odds, Set<Result> finalResultOfGP) {
+        this.gpName = gpName;
+        this.numberOfCurrentGP = numberOfCurrentGP;
+        this.odds = odds;
+        this.finalResultOfGP = finalResultOfGP;
+    }
 
     public String getGpName() {
         return gpName;

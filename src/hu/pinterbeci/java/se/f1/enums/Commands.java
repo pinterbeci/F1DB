@@ -6,7 +6,8 @@ public enum Commands {
     FASTEST ("FASTEST"),
     FINISH ("FINISH"),
     QUERY ("QUERY"),
-    POINT ("POINT");
+    POINT ("POINT"),
+    EXIT ("EXIT");
 
     private final String value;
 
