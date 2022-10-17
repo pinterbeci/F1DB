@@ -1,0 +1,23 @@
+RACE;2020;70th Anniversary Grand Prix;5;1
+RESULT;1;Max Verstappen;Red Bull
+RESULT;2;Lewis Hamilton;Mercedes
+RESULT;3;Valtteri Bottas;Mercedes
+RESULT;4;Charles Leclerc;Ferrari
+RESULT;5;Alexander Albon;Red Bull
+RESULT;6;Lance Stroll;Racing Point
+RESULT;7;Nico Hülkenberg;Racing Point
+RESULT;8;Esteban Ocon;Renault
+RESULT;9;Lando Norris;McLaren
+RESULT;10;Daniil Kvyat;AlphaTauri
+RESULT;11;Pierre Gasly;AlphaTauri
+RESULT;12;Sebastian Vettel;Ferrari
+RESULT;13;Carlos Sainz;McLaren
+RESULT;14;Daniel Ricciardo;Renault
+RESULT;15;Kimi Räikkönen;Alfa Romeo
+RESULT;16;Romain Grosjean;Haas F1 Team
+RESULT;17;Antonio Giovinazzi;Alfa Romeo
+RESULT;18;George Russell;Williams
+RESULT;19;Nicholas Latifi;Williams
+RESULT;20;Kevin Magnussen;Haas F1 Team
+FASTEST;Lewis Hamilton;Mercedes
+FINISH
