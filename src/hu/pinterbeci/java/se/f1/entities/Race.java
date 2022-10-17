@@ -8,18 +8,17 @@ public class Race {
 
     private int numberOfCurrentGP;
 
-    private int odds;
+    private float odds;
 
     private Set<Result> finalResultOfGP;
 
     public Race() {
     }
 
-    public Race(String gpName, int numberOfCurrentGP, int odds, Set<Result> finalResultOfGP) {
+    public Race(String gpName, int numberOfCurrentGP, float odds) {
         this.gpName = gpName;
         this.numberOfCurrentGP = numberOfCurrentGP;
         this.odds = odds;
-        this.finalResultOfGP = finalResultOfGP;
     }
 
     public String getGpName() {
@@ -38,7 +37,7 @@ public class Race {
         this.numberOfCurrentGP = numberOfCurrentGP;
     }
 
-    public int getOdds() {
+    public float getOdds() {
         return odds;
     }
 

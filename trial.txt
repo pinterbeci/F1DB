@@ -1,24 +1,13 @@
+RACE;2009;Australian Grand Prix;1;1
+RESULT;1;Jenson Button;Brawn
+RESULT;2;Rubens Barrichello;Brawn
+RESULT;3;Jarno Trulli;Toyota
+FASTEST;Nico Rosberg;Williams
+FINISH
 RACE;2020;Italian Grand Prix;8;1
 RESULT;1;Pierre Gasly;AlphaTauri
 RESULT;2;Carlos Sainz;McLaren
 RESULT;3;Lance Stroll;Racing Point
-RESULT;4;Lando Norris;McLaren
-RESULT;5;Valtteri Bottas;Mercedes
-RESULT;6;Daniel Ricciardo;Renault
-RESULT;7;Lewis Hamilton;Mercedes
-RESULT;8;Esteban Ocon;Renault
-RESULT;9;Daniil Kvyat;AlphaTauri
-RESULT;10;Sergio Pérez;Racing Point
-RESULT;11;Nicholas Latifi;Williams
-RESULT;12;Romain Grosjean;Haas F1 Team
-RESULT;13;Kimi Räikkönen;Alfa Romeo
-RESULT;14;George Russell;Williams
-RESULT;15;Alexander Albon;Red Bull
-RESULT;16;Antonio Giovinazzi;Alfa Romeo
-RESULT;17;Max Verstappen;Red Bull
-RESULT;18;Charles Leclerc;Ferrari
-RESULT;19;Kevin Magnussen;Haas F1 Team
-RESULT;20;Sebastian Vettel;Ferrari
 FASTEST;Lewis Hamilton;Mercedes
 FINISH
 
