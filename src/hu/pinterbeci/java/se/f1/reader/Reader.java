@@ -4,6 +4,7 @@ import hu.pinterbeci.java.se.f1.enums.Commands;
 import hu.pinterbeci.java.se.f1.pojo.Pilot;
 import hu.pinterbeci.java.se.f1.pojo.Race;
 import hu.pinterbeci.java.se.f1.pojo.Season;
+import hu.pinterbeci.java.se.f1.util.DBUtil;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,51 +12,49 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Reader {
 
-    public static void raceReader(String fileUrl) {
+    public static void raceReader(String fajlUrl) {
 
         Map<Integer, Season> szezonok = new HashMap<>();
-        Set<Pilot> adottEvPilotaiAdatokkal = new HashSet<>();
-        Set<Race> adottEvVerseyAdatok = new HashSet<>();
-        Season adottSzezon = new Season();
-        Race adottVerseny = new Race();
-        int versenyEVe = 0;
-
+        Set<Pilot> adottIdenyPilotai = new HashSet<>();
+        Set<Race> adottIdenyFutamai = new HashSet<>();
+        Race adottFutam = new Race();
+        int adottFutamEve = 0;
 
         BufferedReader reader;
 
         try {
-            reader = new BufferedReader(new FileReader(fileUrl));
-            String line = reader.readLine();
+            reader = new BufferedReader(new FileReader(fajlUrl));
+            String adottOlvasandoSor = reader.readLine();
 
-            while (line != null && !line.equals(Commands.EXIT.getValue())) {
-                String command = line.trim().split(";")[0];
+            while (adottOlvasandoSor != null && !adottOlvasandoSor.equals(Commands.EXIT.getValue())) {
+                String parancs = adottOlvasandoSor.trim().split(";")[0];
 
                 float szorzo = -1;
-                Pilot leggyorsabb = new Pilot();
+                Pilot futamLeggyorsabbja = new Pilot();
 
-                if (Commands.RACE.getValue().equals(command)) {
-                    adottVerseny = new Race();
+                if (Commands.RACE.getValue().equals(parancs)) {
+                    adottFutam = new Race();
                     //szerintem itt kellene két set-et nullozni.
 
-                    String[] splittedString = line.trim().split(";");
+                    String[] splittedString = adottOlvasandoSor.trim().split(";");
 
-                    versenyEVe = Integer.parseInt(splittedString[1]);
+                    adottFutamEve = Integer.parseInt(splittedString[1]);
                     String versenyNeve = splittedString[2];
-                    int hanyadikVersenyAzAdottEvben = Integer.parseInt(splittedString[3]);
+                    int versenySorszama = Integer.parseInt(splittedString[3]);
                     //todo ez fontos lehet a pontszámításnál
                     szorzo = Float.parseFloat(splittedString[4]);
 
-                    adottVerseny.setGpName(versenyNeve);
-                    adottVerseny.setNumberOfCurrentGP(hanyadikVersenyAzAdottEvben);
-                    adottVerseny.setOdds(szorzo);
+                    adottFutam.setGpName(versenyNeve);
+                    adottFutam.setNumberOfCurrentGP(versenySorszama);
+                    adottFutam.setOdds(szorzo);
 
                 }
-                if (Commands.RESULT.getValue().equals(command)) {
-                    String[] splittedString = line.trim().split(";");
+                if (Commands.RESULT.getValue().equals(parancs)) {
+                    //todo
+                    String[] splittedString = adottOlvasandoSor.trim().split(";");
 
                     int helyezes = Integer.parseInt(splittedString[1]);
                     String pilotaTeljesneve = splittedString[2];
@@ -64,45 +63,44 @@ public class Reader {
                     Pilot versenyzo = new Pilot();
                     versenyzo.setFullname(pilotaTeljesneve);
                     versenyzo.setTeamName(csapatNeve);
-                    //ide majd kell egy függvény, ami pontot számít
+
+                    //todo pontszámítás szorzót figyelembe kell venni
+
                     versenyzo.setPoints(helyezes);
-                    adottEvPilotaiAdatokkal.add(versenyzo);
+                    adottIdenyPilotai.add(versenyzo);
                 }
-                if (Commands.FASTEST.getValue().equals(command)) {
-                    String[] splittedString = line.trim().split(";");
+                if (Commands.FASTEST.getValue().equals(parancs)) {
+                    //todo kiszervezni
+                    String[] splittedString = adottOlvasandoSor.trim().split(";");
                     String pilotaTeljesneve = splittedString[1];
                     String csapatNeve = splittedString[2];
 
-                    leggyorsabb.setFullname(pilotaTeljesneve);
-                    leggyorsabb.setTeamName(csapatNeve);
+                    futamLeggyorsabbja.setFullname(pilotaTeljesneve);
+                    futamLeggyorsabbja.setTeamName(csapatNeve);
 
-                    adottVerseny.setFastestPilot(leggyorsabb);
-                    adottEvVerseyAdatok.add(adottVerseny);
+                    adottFutam.setFastestPilot(futamLeggyorsabbja);
+                    adottIdenyFutamai.add(adottFutam);
                 }
-                if (Commands.FINISH.getValue().equals(command)) {
+                if (Commands.FINISH.getValue().equals(parancs)) {
+                    if (!szezonok.containsKey(adottFutamEve)) {
+                        Season adottSzezon = new Season();
+                        adottSzezon.setYear(adottFutamEve);
+                        adottSzezon.setRacesOfSeason(adottIdenyFutamai);
+                        adottSzezon.setPilotsOfThisSeason(adottIdenyPilotai);
+                        szezonok.put(adottFutamEve, adottSzezon);
 
-
-                    //pontot kell számolni minden pilóta esetén
-                    //validációk is kellenek!!!!!!!!
-                    if (!szezonok.containsKey(versenyEVe)) {
-                        adottSzezon = new Season();
-                        adottSzezon.setYear(versenyEVe);
-                        adottSzezon.setRacesOfSeason(adottEvVerseyAdatok);
-                        adottSzezon.setPilotsOfThisSeason(adottEvPilotaiAdatokkal);
-                        szezonok.put(versenyEVe, adottSzezon);
                     } else {
-                        Season season = szezonok.get(versenyEVe);
-                        season.setYear(versenyEVe);
-                        season.getRacesOfSeason().addAll(adottEvVerseyAdatok);
-                        season.setPilotsOfThisSeason(mergeSet(season.getPilotsOfThisSeason(), adottEvPilotaiAdatokkal));
-                        szezonok.put(versenyEVe, season);
+                        Season adottSzezon = szezonok.get(adottFutamEve);
+                        adottSzezon.setYear(adottFutamEve);
+                        adottSzezon.getRacesOfSeason().addAll(adottIdenyFutamai);
+                        adottSzezon.setPilotsOfThisSeason(DBUtil.mergeSet(adottSzezon.getPilotsOfThisSeason(), adottIdenyPilotai));
+                        szezonok.put(adottFutamEve, adottSzezon);
                     }
-
-                    adottEvPilotaiAdatokkal = new HashSet<>();
-                    adottEvVerseyAdatok = new HashSet<>();
+                    adottIdenyPilotai = new HashSet<>();
+                    adottIdenyFutamai = new HashSet<>();
                 }
 
-                line = reader.readLine();
+                adottOlvasandoSor = reader.readLine();
             }
             reader.close();
         } catch (Exception e) {
@@ -111,28 +109,14 @@ public class Reader {
     }
 
 
-    public static <T> Set<T> mergeSet(Set<T> a, Set<T> b) {
-        return a.stream().filter(first -> b.stream().anyMatch(second -> !first.equals(second)))
-                .collect(Collectors.toSet());
-    }
+    //todo kód egyszerúsítés OOP-sítés!!!
 
+    //todo kiszervezni:
+    //validációk, pontszámítás
+    //illetve, hogy az adott parancsok mikor adhatók ki, lehetne valamilyen boolean-nel jelezni
+    //splittelést kiszervezni....
 
-
-   /* private static boolean validRace(String[] splittedArray) {
-
-        int year = Integer.parseInt(Objects.requireNonNull(splittedArray)[1]);
-        String nameOfGP = splittedArray[2];
-        int gpNumb = Integer.parseInt(splittedArray[3]);
-        float odds = Float.parseFloat(splittedArray[4]);
-
-        Float[] validOdds = {0.0f, 0.5f, 1.0f, 2.0f};
-        boolean isValidOdds = Arrays.asList(validOdds).contains(odds);
-        boolean isValidGPName = nameOfGP != null && !nameOfGP.isEmpty();
-        boolean isValidPlace = gpNumb > 0 && gpNumb < 30;
-        boolean isValidYear = year > 1945 && year < 2023;
-
-        return isValidGPName && isValidOdds && isValidYear && isValidPlace;
-
-    }*/
+    //todo
+    //elnevezések
 
 }
