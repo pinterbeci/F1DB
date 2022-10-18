@@ -1,6 +1,4 @@
-package hu.pinterbeci.java.se.f1.entities;
-
-import java.util.Set;
+package hu.pinterbeci.java.se.f1.pojo;
 
 public class Race {
 
@@ -10,15 +8,9 @@ public class Race {
 
     private float odds;
 
-    private Set<Result> finalResultOfGP;
+    private Pilot fastestPilot;
 
     public Race() {
-    }
-
-    public Race(String gpName, int numberOfCurrentGP, float odds) {
-        this.gpName = gpName;
-        this.numberOfCurrentGP = numberOfCurrentGP;
-        this.odds = odds;
     }
 
     public String getGpName() {
@@ -41,15 +33,26 @@ public class Race {
         return odds;
     }
 
-    public void setOdds(int odds) {
+    public void setOdds(float odds) {
         this.odds = odds;
     }
 
-    public Set<Result> getFinalResultOfGP() {
-        return finalResultOfGP;
+    public Pilot getFastestPilot() {
+        return fastestPilot;
     }
 
-    public void setFinalResultOfGP(Set<Result> finalResultOfGP) {
-        this.finalResultOfGP = finalResultOfGP;
+    public void setFastestPilot(Pilot fastestPilot) {
+        this.fastestPilot = fastestPilot;
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (o instanceof Race) {
+            return this.gpName.equals(((Race) o).gpName) && this.numberOfCurrentGP == ((Race) o).numberOfCurrentGP;
+
+        }
+        return false;
+    }
+
 }

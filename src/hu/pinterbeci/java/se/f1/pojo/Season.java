@@ -1,4 +1,4 @@
-package hu.pinterbeci.java.se.f1.entities;
+package hu.pinterbeci.java.se.f1.pojo;
 
 import java.util.Set;
 
@@ -10,7 +10,7 @@ public class Season {
 
     private Set<Pilot> pilotsOfThisSeason;
 
-    private Set<Result> resultOfThisSeason;
+    private Set<Race> racesOfSeason;
 
     public Season() {
     }
@@ -31,11 +31,11 @@ public class Season {
         this.pilotsOfThisSeason = pilotsOfThisSeason;
     }
 
-    public Set<Result> getResultOfThisSeason() {
-        return resultOfThisSeason;
+    public Set<Race> getRacesOfSeason() {
+        return racesOfSeason;
     }
 
-    public void setResultOfThisSeason(Set<Result> resultOfThisSeason) {
-        this.resultOfThisSeason = resultOfThisSeason;
+    public void setRacesOfSeason(Set<Race> racesOfSeason) {
+        this.racesOfSeason = racesOfSeason;
     }
 }

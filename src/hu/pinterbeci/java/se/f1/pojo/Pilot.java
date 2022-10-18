@@ -1,4 +1,4 @@
-package hu.pinterbeci.java.se.f1.entities;
+package hu.pinterbeci.java.se.f1.pojo;
 
 public class Pilot {
 
@@ -8,11 +8,8 @@ public class Pilot {
 
     private int points;
 
-    private int fastestLapsPerYear;
-
     public Pilot() {
     }
-
 
     public String getFullname() {
         return fullname;
@@ -38,11 +35,15 @@ public class Pilot {
         this.points = points;
     }
 
-    public int getFastestLapsPerYear() {
-        return fastestLapsPerYear;
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Pilot) {
+            return this.fullname.equals(((Pilot) o).fullname) && this.teamName.equals(((Pilot) o).teamName);
+        }
+        return false;
     }
 
-    public void setFastestLapsPerYear(int fastestLapsPerYear) {
-        this.fastestLapsPerYear = fastestLapsPerYear;
-    }
+
+
+
 }
