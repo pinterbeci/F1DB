@@ -18,9 +18,3 @@ RESULT;3;Heikki Kovalainen;McLaren
 RESULT;4;Nico Rosberg;Williams
 FASTEST;Nick Heidfeld;BMW Sauber
 FINISH
-
-rosberg
-rájkönen
-kubica
-hamilton
-kovalainen

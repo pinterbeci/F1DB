@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Reader {
 
@@ -80,21 +81,23 @@ public class Reader {
                 }
                 if (Commands.FINISH.getValue().equals(command)) {
 
+
+                    //pontot kell számolni minden pilóta esetén
+                    //validációk is kellenek!!!!!!!!
                     if (!szezonok.containsKey(versenyEVe)) {
                         adottSzezon = new Season();
                         adottSzezon.setYear(versenyEVe);
                         adottSzezon.setRacesOfSeason(adottEvVerseyAdatok);
                         adottSzezon.setPilotsOfThisSeason(adottEvPilotaiAdatokkal);
                         szezonok.put(versenyEVe, adottSzezon);
-                    } else if (szezonok.containsKey(versenyEVe)) {
-
-                        szezonok.get(versenyEVe).setPilotsOfThisSeason(
-                                mergeSet(szezonok.get(versenyEVe).getPilotsOfThisSeason(), adottEvPilotaiAdatokkal));
-
-                        szezonok.get(versenyEVe).setRacesOfSeason(
-                                mergeSet(szezonok.get(versenyEVe).getRacesOfSeason(), adottEvVerseyAdatok));
-
+                    } else {
+                        Season season = szezonok.get(versenyEVe);
+                        season.setYear(versenyEVe);
+                        season.getRacesOfSeason().addAll(adottEvVerseyAdatok);
+                        season.setPilotsOfThisSeason(mergeSet(season.getPilotsOfThisSeason(), adottEvPilotaiAdatokkal));
+                        szezonok.put(versenyEVe, season);
                     }
+
                     adottEvPilotaiAdatokkal = new HashSet<>();
                     adottEvVerseyAdatok = new HashSet<>();
                 }
@@ -108,21 +111,9 @@ public class Reader {
     }
 
 
-    public static <T>Set<T> mergeSet(Set<T> a, Set<T> b) {
-
-        Set<T> result = new HashSet<>();
-        for (T first : a) {
-            for (T second : b) {
-                if (!first.equals(second)) {
-                    if (result.contains(second)) {
-                        result.add(first);
-                    } else {
-                        result.add(second);
-                    }
-                }
-            }
-        }
-        return result;
+    public static <T> Set<T> mergeSet(Set<T> a, Set<T> b) {
+        return a.stream().filter(first -> b.stream().anyMatch(second -> !first.equals(second)))
+                .collect(Collectors.toSet());
     }
 
 
