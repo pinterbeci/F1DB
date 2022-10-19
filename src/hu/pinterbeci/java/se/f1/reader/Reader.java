@@ -21,11 +21,16 @@ public class Reader {
         Set<Race> adottIdenyFutamai = new HashSet<>();
         Race adottFutam = new Race();
         int adottFutamEve = 0;
+
         BufferedReader reader;
 
         try {
             reader = new BufferedReader(new FileReader(fajlUrl));
             String adottOlvasandoSor = reader.readLine();
+            boolean isFastestReaded = false;
+            boolean isRaceReaded = false;
+            int resultokSzama = 0;
+            boolean voltNemMegfeleloParancs = false;
 
             while (adottOlvasandoSor != null && !adottOlvasandoSor.equals(Commands.EXIT.getValue())) {
                 List<String> splitterList = Splitter.splitter(adottOlvasandoSor, ";");
@@ -38,6 +43,7 @@ public class Reader {
                 //illetve kiszervezni, valamilyen osztályba a parancsok felismerése után lévő blokkokat
 
                 if (Commands.RACE.getValue().equals(parancs)) {
+                    isRaceReaded = true;
                     adottFutam = new Race();
                     //szerintem itt kellene két set-et nullozni.
 
@@ -54,8 +60,9 @@ public class Reader {
                         adottFutam.setOdds(szorzo);
                     }
 
-                }
-                if (Commands.RESULT.getValue().equals(parancs)) {
+                } else if (Commands.RESULT.getValue().equals(parancs)) {
+
+                    resultokSzama++;
 
                     int helyezes = Integer.parseInt(splitterList.get(1));
                     String pilotaTeljesneve = splitterList.get(2);
@@ -71,9 +78,9 @@ public class Reader {
                     if (Validator.isValidPilot(versenyzo)) {
                         adottIdenyPilotai.add(versenyzo);
                     }
-                }
-                if (Commands.FASTEST.getValue().equals(parancs)) {
+                } else if (Commands.FASTEST.getValue().equals(parancs)) {
 
+                    isFastestReaded = true;
                     String pilotaTeljesneve = splitterList.get(1);
                     String csapatNeve = splitterList.get(2);
 
@@ -84,25 +91,47 @@ public class Reader {
                         adottFutam.setFastestPilot(futamLeggyorsabbja);
                         adottIdenyFutamai.add(adottFutam);
                     }
-                }
-                if (Commands.FINISH.getValue().equals(parancs)) {
+                } else if (Commands.FINISH.getValue().equals(parancs)) {
+
+
+                    Season adottSzezon = new Season();
 
                     if (!szezonok.containsKey(adottFutamEve)) {
-                        Season adottSzezon = new Season();
+
                         adottSzezon.setYear(adottFutamEve);
                         adottSzezon.setRacesOfSeason(adottIdenyFutamai);
                         adottSzezon.setPilotsOfThisSeason(adottIdenyPilotai);
-                        szezonok.put(adottFutamEve, adottSzezon);
+
+                /*        int versenyzokSzamaAdottEvben = szezonok.get(adottFutamEve).getPilotsOfThisSeason().size();
+                        boolean mentheto = Validator.validOlvasas(isRaceReaded, voltNemMegfeleloParancs, resultokSzama, versenyzokSzamaAdottEvben, isFastestReaded);
+*/
+                        /*if (Validator.isValidSeason(adottSzezon)) {*/
+                            szezonok.put(adottFutamEve, adottSzezon);
+                        /*}*/
 
                     } else {
-                        Season adottSzezon = szezonok.get(adottFutamEve);
-                        adottSzezon.setYear(adottFutamEve);
-                        adottSzezon.getRacesOfSeason().addAll(adottIdenyFutamai);
-                        adottSzezon.setPilotsOfThisSeason(DBUtil.mergeSet(adottSzezon.getPilotsOfThisSeason(), adottIdenyPilotai));
-                        szezonok.put(adottFutamEve, adottSzezon);
+                        adottSzezon = szezonok.get(adottFutamEve);
+
+              /*          int versenyzokSzamaAdottEvben = szezonok.get(adottFutamEve).getPilotsOfThisSeason().size();
+                        boolean modosithato = Validator.validOlvasas(isRaceReaded, voltNemMegfeleloParancs, resultokSzama, versenyzokSzamaAdottEvben, isFastestReaded);
+*/
+                        /*if (Validator.isValidSeason(adottSzezon)) {*/
+                            adottSzezon.setYear(adottFutamEve);
+                            adottSzezon.getRacesOfSeason().addAll(adottIdenyFutamai);
+                            adottSzezon.setPilotsOfThisSeason(DBUtil.mergeSet(adottSzezon.getPilotsOfThisSeason(), adottIdenyPilotai));
+                            szezonok.put(adottFutamEve, adottSzezon);
+                        /*}*/
                     }
                     adottIdenyPilotai = new HashSet<>();
                     adottIdenyFutamai = new HashSet<>();
+
+                    isFastestReaded = false;
+                    isRaceReaded = false;
+                    resultokSzama = 0;
+                    voltNemMegfeleloParancs = false;
+
+                } else {
+                    voltNemMegfeleloParancs = true;
                 }
 
                 adottOlvasandoSor = reader.readLine();

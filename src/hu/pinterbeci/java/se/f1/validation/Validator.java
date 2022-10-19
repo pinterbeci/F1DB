@@ -44,4 +44,11 @@ public class Validator {
         return false;
     }
 
+    public static boolean validOlvasas(boolean isRaceReaded, boolean voltNemMegfeleloParancs, int resultokSzama, int versenyzokSzamaAdottEvben, boolean isFastestReaded) {
+        return isRaceReaded
+                && !voltNemMegfeleloParancs
+                && (resultokSzama > 9 && resultokSzama <= versenyzokSzamaAdottEvben)
+                && isFastestReaded;
+    }
+
 }
