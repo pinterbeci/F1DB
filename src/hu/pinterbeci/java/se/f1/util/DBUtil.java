@@ -13,11 +13,11 @@ public class DBUtil {
     }
 
     public static void evenkentiHelyezesekMentese(int adottSzezonEve, int helyezes, Pilot pilot, Map<Integer, Map<Integer, List<Pilot>>> kapott) {
-        if(!kapott.containsKey(adottSzezonEve)){
+        if (!kapott.containsKey(adottSzezonEve)) {
             Map<Integer, List<Pilot>> integerListMap = new HashMap<>();
             pilotakHelyezeseiMap(helyezes, pilot, integerListMap);
             kapott.put(adottSzezonEve, integerListMap);
-        }else{
+        } else {
             Map<Integer, List<Pilot>> integerListMap = kapott.get(adottSzezonEve);
             pilotakHelyezeseiMap(helyezes, pilot, integerListMap);
             kapott.put(adottSzezonEve, integerListMap);
@@ -42,4 +42,24 @@ public class DBUtil {
         return adatok;
     }
 
+    public static void writer(int ev, Map<String, Integer> eredmenyek) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Az adott évben (").append(ev).append(")").append(" a következő módon alakult a végeredmény:\n");
+
+
+        for (Map.Entry<String, Integer> stringIntegerEntry : eredmenyek.entrySet()) {
+            stringBuilder.append(stringIntegerEntry.getKey()).append(" : ").append(stringIntegerEntry.getValue()).append(" pont\n");
+        }
+        System.out.println(stringBuilder.toString());
+
+    }
+
+    public static LinkedHashMap<String, Integer> rendezo(Map<String, Integer> vegeredmeny) {
+        Comparator<Integer> byValue = Integer::compareTo;
+
+        return vegeredmeny.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue(byValue))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e2, e1) -> e2, LinkedHashMap::new));
+
+    }
 }

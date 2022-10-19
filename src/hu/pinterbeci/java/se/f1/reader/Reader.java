@@ -1,5 +1,6 @@
 package hu.pinterbeci.java.se.f1.reader;
 
+import hu.pinterbeci.java.se.f1.counter.Counter;
 import hu.pinterbeci.java.se.f1.enums.Commands;
 import hu.pinterbeci.java.se.f1.pojo.Pilot;
 import hu.pinterbeci.java.se.f1.pojo.Places;
@@ -18,7 +19,7 @@ public class Reader {
     public static void raceReader(String fajlUrl) {
 
         Map<Integer, Season> szezonok = new HashMap<>();
-        Map<Integer, Map<Integer, List<Pilot>>> evekentiHelyezesek = new HashMap<>();
+        Map<Integer, Map<Integer, List<Pilot>>> eredemenyekEvenkent = new HashMap<>();
         List<String> vegrehajtandoParancsok = new ArrayList<String>();
         Set<Pilot> adottIdenyPilotai = new HashSet<>();
         Set<Race> adottIdenyFutamai = new HashSet<>();
@@ -75,7 +76,7 @@ public class Reader {
 
                     if (Validator.isValidPilot(versenyzo)) {
                         adottIdenyPilotai.add(versenyzo);
-                        DBUtil.evenkentiHelyezesekMentese(adottFutamEve, helyezes, versenyzo, evekentiHelyezesek);
+                        DBUtil.evenkentiHelyezesekMentese(adottFutamEve, helyezes, versenyzo, eredemenyekEvenkent);
                     }
                 } else if (Commands.FASTEST.getValue().equals(parancs)) {
 
@@ -137,11 +138,7 @@ public class Reader {
                 adottOlvasandoSor = reader.readLine();
             }
             reader.close();
-            //todo
-            // ezzel a három adathalmazzal lehet dolgozni, egy service-ben
-            // evekentiHelyezesek
-            // szezonok
-            // vegrehajtandoParancsok
+            DBUtil.writer(2020, Counter.trial(eredemenyekEvenkent, 2020));
         } catch (Exception e) {
             System.out.println("Kivétel a fájlolvasás során! " + e);
         }
