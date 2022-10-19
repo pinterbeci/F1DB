@@ -93,7 +93,6 @@ public class Reader {
                     }
                 } else if (Commands.FINISH.getValue().equals(parancs)) {
 
-
                     Season adottSzezon = new Season();
 
                     if (!szezonok.containsKey(adottFutamEve)) {
@@ -102,25 +101,25 @@ public class Reader {
                         adottSzezon.setRacesOfSeason(adottIdenyFutamai);
                         adottSzezon.setPilotsOfThisSeason(adottIdenyPilotai);
 
-                /*        int versenyzokSzamaAdottEvben = szezonok.get(adottFutamEve).getPilotsOfThisSeason().size();
+                        int versenyzokSzamaAdottEvben = adottIdenyPilotai.size();
                         boolean mentheto = Validator.validOlvasas(isRaceReaded, voltNemMegfeleloParancs, resultokSzama, versenyzokSzamaAdottEvben, isFastestReaded);
-*/
-                        /*if (Validator.isValidSeason(adottSzezon)) {*/
+
+                        if (Validator.isValidSeason(adottSzezon) && mentheto) {
                             szezonok.put(adottFutamEve, adottSzezon);
-                        /*}*/
+                        }
 
                     } else {
                         adottSzezon = szezonok.get(adottFutamEve);
 
-              /*          int versenyzokSzamaAdottEvben = szezonok.get(adottFutamEve).getPilotsOfThisSeason().size();
+                        int versenyzokSzamaAdottEvben = adottIdenyPilotai.size();
                         boolean modosithato = Validator.validOlvasas(isRaceReaded, voltNemMegfeleloParancs, resultokSzama, versenyzokSzamaAdottEvben, isFastestReaded);
-*/
-                        /*if (Validator.isValidSeason(adottSzezon)) {*/
+
+                        if (Validator.isValidSeason(adottSzezon) && modosithato) {
                             adottSzezon.setYear(adottFutamEve);
                             adottSzezon.getRacesOfSeason().addAll(adottIdenyFutamai);
                             adottSzezon.setPilotsOfThisSeason(DBUtil.mergeSet(adottSzezon.getPilotsOfThisSeason(), adottIdenyPilotai));
                             szezonok.put(adottFutamEve, adottSzezon);
-                        /*}*/
+                        }
                     }
                     adottIdenyPilotai = new HashSet<>();
                     adottIdenyFutamai = new HashSet<>();
