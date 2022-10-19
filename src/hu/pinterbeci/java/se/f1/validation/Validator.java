@@ -23,7 +23,7 @@ public class Validator {
     }
 
     public static boolean isValidPilot(Pilot pilot) {
-        return pilot != null && !"".equals(pilot.getTeamName()) && !"".equals(pilot.getFullname()) && pilot.getPoints() > -1;
+        return pilot != null && !"".equals(pilot.getTeamName()) && !"".equals(pilot.getFullname());
     }
 
     public static boolean isValidSeason(Season season) {

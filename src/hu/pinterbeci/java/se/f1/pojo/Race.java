@@ -10,8 +10,6 @@ public class Race {
 
     private Pilot fastestPilot;
 
-    public Race() {
-    }
 
     public String getGpName() {
         return gpName;

@@ -1,7 +1,5 @@
 package hu.pinterbeci.java.se.f1.pojo;
 
-import java.util.List;
-
 public class Pilot {
 
     private String fullname;
@@ -10,21 +8,8 @@ public class Pilot {
 
     private float points;
 
-    private List<Integer> places;
-
-    public Pilot() {
-    }
-
     public String getFullname() {
         return fullname;
-    }
-
-    public List<Integer> getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(List<Integer> places) {
-        this.places = places;
     }
 
     public void setFullname(String fullname) {

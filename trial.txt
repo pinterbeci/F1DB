@@ -1,30 +1,20 @@
-
-
-
-
-
-
-
 RACE;2008;Australian Grand Prix;1;1
 RESULT;1;Lewis Hamilton;McLaren
 RESULT;2;Nick Heidfeld;BMW Sauber
 RESULT;3;Nico Rosberg;Williams
-FASTEST;Heikki Kovalainen;McLaren
+FASTEST;Nico Rosberg;Williams
 FINISH
-
-
+EXIT
 
 RACE;2009;Malaysian Grand Prix;2;1
-
-
-
 RESULT;1;Kimi Räikkönen;Ferrari
 RESULT;2;Robert Kubica;BMW Sauber
-
-
 RESULT;3;Heikki Kovalainen;McLaren
 FASTEST;Nick Heidfeld;BMW Sauber
 FINISH
+
+
+EXIT
 
 RACE;2008;Malaysian Grand Prix3;2;1
 RESULT;1;Kimi Räikkönen;Ferrari

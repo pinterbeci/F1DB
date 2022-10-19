@@ -2,6 +2,7 @@ package hu.pinterbeci.java.se.f1.reader;
 
 import hu.pinterbeci.java.se.f1.enums.Commands;
 import hu.pinterbeci.java.se.f1.pojo.Pilot;
+import hu.pinterbeci.java.se.f1.pojo.Places;
 import hu.pinterbeci.java.se.f1.pojo.Race;
 import hu.pinterbeci.java.se.f1.pojo.Season;
 import hu.pinterbeci.java.se.f1.util.DBUtil;
@@ -17,9 +18,12 @@ public class Reader {
     public static void raceReader(String fajlUrl) {
 
         Map<Integer, Season> szezonok = new HashMap<>();
+        Map<Integer, Map<Integer, List<Pilot>>> evekentiHelyezesek = new HashMap<>();
+        List<String> vegrehajtandoParancsok = new ArrayList<String>();
         Set<Pilot> adottIdenyPilotai = new HashSet<>();
         Set<Race> adottIdenyFutamai = new HashSet<>();
         Race adottFutam = new Race();
+        Places places = new Places();
         int adottFutamEve = 0;
 
         BufferedReader reader;
@@ -67,12 +71,11 @@ public class Reader {
                     Pilot versenyzo = new Pilot();
                     versenyzo.setFullname(pilotaTeljesneve);
                     versenyzo.setTeamName(csapatNeve);
-                    //todo
-                    // pontszámítás ?????????
-                    versenyzo.setPoints(helyezes * szorzo);
+                    versenyzo.setPoints(helyezes);
 
                     if (Validator.isValidPilot(versenyzo)) {
                         adottIdenyPilotai.add(versenyzo);
+                        DBUtil.evenkentiHelyezesekMentese(adottFutamEve, helyezes, versenyzo, evekentiHelyezesek);
                     }
                 } else if (Commands.FASTEST.getValue().equals(parancs)) {
 
@@ -84,8 +87,6 @@ public class Reader {
                     futamLeggyorsabbja.setTeamName(csapatNeve);
 
                     if (Validator.theFastestBelongTheResultList(pilotaTeljesneve, new ArrayList<>(adottIdenyPilotai))) {
-                        //todo
-                        // ekkor, ha benne volt a top-ban, akkor a modern pontszámítás szerint kap majd plusz pontot
                         adottFutam.setFastestPilot(futamLeggyorsabbja);
                         adottIdenyFutamai.add(adottFutam);
                     }
@@ -126,23 +127,23 @@ public class Reader {
                     isRaceReaded = false;
                     resultokSzama = 0;
                     voltNemMegfeleloParancs = false;
-
+                } else if (Commands.QUERY.getValue().equals(parancs)) {
+                    vegrehajtandoParancsok.add(adottOlvasandoSor);
+                } else if (Commands.POINT.getValue().equals(parancs)) {
+                    vegrehajtandoParancsok.add(adottOlvasandoSor);
                 } else {
                     voltNemMegfeleloParancs = true;
                 }
-
                 adottOlvasandoSor = reader.readLine();
             }
             reader.close();
+            //todo
+            // ezzel a három adathalmazzal lehet dolgozni, egy service-ben
+            // evekentiHelyezesek
+            // szezonok
+            // vegrehajtandoParancsok
         } catch (Exception e) {
             System.out.println("Kivétel a fájlolvasás során! " + e);
         }
     }
-
-    //todo:
-    // kiszervezni kódokat
-    // pontszámítás
-    // elnevezések
-    // kód egyszerúsítés OOP-sítés
-
 }

@@ -12,8 +12,6 @@ public class Season {
 
     private Set<Race> racesOfSeason;
 
-    public Season() {
-    }
 
     public int getYear() {
         return year;
