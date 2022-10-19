@@ -1,18 +1,30 @@
 package hu.pinterbeci.java.se.f1.pojo;
 
+import java.util.List;
+
 public class Pilot {
 
     private String fullname;
 
     private String teamName;
 
-    private int points;
+    private float points;
+
+    private List<Integer> places;
 
     public Pilot() {
     }
 
     public String getFullname() {
         return fullname;
+    }
+
+    public List<Integer> getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(List<Integer> places) {
+        this.places = places;
     }
 
     public void setFullname(String fullname) {
@@ -27,11 +39,11 @@ public class Pilot {
         this.teamName = teamName;
     }
 
-    public int getPoints() {
+    public float getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(float points) {
         this.points = points;
     }
 

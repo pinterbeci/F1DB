@@ -39,18 +39,13 @@ public class Reader {
                 float szorzo = -1;
                 Pilot futamLeggyorsabbja = new Pilot();
 
-                //todo ha működik, akkor meg kell nézni, hogy a splittelt elemek megfelelőek a parancsnak
-                //illetve kiszervezni, valamilyen osztályba a parancsok felismerése után lévő blokkokat
-
                 if (Commands.RACE.getValue().equals(parancs)) {
                     isRaceReaded = true;
                     adottFutam = new Race();
-                    //szerintem itt kellene két set-et nullozni.
 
                     adottFutamEve = Integer.parseInt(splitterList.get(1));
                     String versenyNeve = splitterList.get(2);
                     int versenySorszama = Integer.parseInt(splitterList.get(3));
-                    //todo ez fontos lehet a pontszámításnál
                     szorzo = Float.parseFloat(splitterList.get(4));
 
 
@@ -65,15 +60,16 @@ public class Reader {
                     resultokSzama++;
 
                     int helyezes = Integer.parseInt(splitterList.get(1));
+
                     String pilotaTeljesneve = splitterList.get(2);
                     String csapatNeve = splitterList.get(3);
 
                     Pilot versenyzo = new Pilot();
                     versenyzo.setFullname(pilotaTeljesneve);
                     versenyzo.setTeamName(csapatNeve);
-
-                    //todo pontszámítás szorzót figyelembe kell venni
-                    versenyzo.setPoints(helyezes);
+                    //todo
+                    // pontszámítás ?????????
+                    versenyzo.setPoints(helyezes * szorzo);
 
                     if (Validator.isValidPilot(versenyzo)) {
                         adottIdenyPilotai.add(versenyzo);
@@ -88,6 +84,8 @@ public class Reader {
                     futamLeggyorsabbja.setTeamName(csapatNeve);
 
                     if (Validator.theFastestBelongTheResultList(pilotaTeljesneve, new ArrayList<>(adottIdenyPilotai))) {
+                        //todo
+                        // ekkor, ha benne volt a top-ban, akkor a modern pontszámítás szerint kap majd plusz pontot
                         adottFutam.setFastestPilot(futamLeggyorsabbja);
                         adottIdenyFutamai.add(adottFutam);
                     }
@@ -141,15 +139,10 @@ public class Reader {
         }
     }
 
-
-    //todo kód egyszerúsítés OOP-sítés!!!
-
-    //todo kiszervezni:
-    //validációk, pontszámítás
-    //illetve, hogy az adott parancsok mikor adhatók ki, lehetne valamilyen boolean-nel jelezni
-    //splittelést kiszervezni....
-
-    //todo
-    //elnevezések
+    //todo:
+    // kiszervezni kódokat
+    // pontszámítás
+    // elnevezések
+    // kód egyszerúsítés OOP-sítés
 
 }
