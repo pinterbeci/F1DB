@@ -5,13 +5,12 @@ import hu.pinterbeci.java.se.f1.pojo.Pilot;
 import hu.pinterbeci.java.se.f1.pojo.Race;
 import hu.pinterbeci.java.se.f1.pojo.Season;
 import hu.pinterbeci.java.se.f1.util.DBUtil;
+import hu.pinterbeci.java.se.f1.util.Splitter;
+import hu.pinterbeci.java.se.f1.validation.Validator;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Reader {
 
@@ -22,7 +21,6 @@ public class Reader {
         Set<Race> adottIdenyFutamai = new HashSet<>();
         Race adottFutam = new Race();
         int adottFutamEve = 0;
-
         BufferedReader reader;
 
         try {
@@ -30,58 +28,65 @@ public class Reader {
             String adottOlvasandoSor = reader.readLine();
 
             while (adottOlvasandoSor != null && !adottOlvasandoSor.equals(Commands.EXIT.getValue())) {
-                String parancs = adottOlvasandoSor.trim().split(";")[0];
+                List<String> splitterList = Splitter.splitter(adottOlvasandoSor, ";");
+                String parancs = Validator.validateCommand(splitterList.get(0)) ? splitterList.get(0) : "";
 
                 float szorzo = -1;
                 Pilot futamLeggyorsabbja = new Pilot();
+
+                //todo ha működik, akkor meg kell nézni, hogy a splittelt elemek megfelelőek a parancsnak
+                //illetve kiszervezni, valamilyen osztályba a parancsok felismerése után lévő blokkokat
 
                 if (Commands.RACE.getValue().equals(parancs)) {
                     adottFutam = new Race();
                     //szerintem itt kellene két set-et nullozni.
 
-                    String[] splittedString = adottOlvasandoSor.trim().split(";");
-
-                    adottFutamEve = Integer.parseInt(splittedString[1]);
-                    String versenyNeve = splittedString[2];
-                    int versenySorszama = Integer.parseInt(splittedString[3]);
+                    adottFutamEve = Integer.parseInt(splitterList.get(1));
+                    String versenyNeve = splitterList.get(2);
+                    int versenySorszama = Integer.parseInt(splitterList.get(3));
                     //todo ez fontos lehet a pontszámításnál
-                    szorzo = Float.parseFloat(splittedString[4]);
+                    szorzo = Float.parseFloat(splitterList.get(4));
 
-                    adottFutam.setGpName(versenyNeve);
-                    adottFutam.setNumberOfCurrentGP(versenySorszama);
-                    adottFutam.setOdds(szorzo);
+
+                    if (Validator.isValidRace(versenyNeve, szorzo, versenySorszama)) {
+                        adottFutam.setGpName(versenyNeve);
+                        adottFutam.setNumberOfCurrentGP(versenySorszama);
+                        adottFutam.setOdds(szorzo);
+                    }
 
                 }
                 if (Commands.RESULT.getValue().equals(parancs)) {
-                    //todo
-                    String[] splittedString = adottOlvasandoSor.trim().split(";");
 
-                    int helyezes = Integer.parseInt(splittedString[1]);
-                    String pilotaTeljesneve = splittedString[2];
-                    String csapatNeve = splittedString[3];
+                    int helyezes = Integer.parseInt(splitterList.get(1));
+                    String pilotaTeljesneve = splitterList.get(2);
+                    String csapatNeve = splitterList.get(3);
 
                     Pilot versenyzo = new Pilot();
                     versenyzo.setFullname(pilotaTeljesneve);
                     versenyzo.setTeamName(csapatNeve);
 
                     //todo pontszámítás szorzót figyelembe kell venni
-
                     versenyzo.setPoints(helyezes);
-                    adottIdenyPilotai.add(versenyzo);
+
+                    if (Validator.isValidPilot(versenyzo)) {
+                        adottIdenyPilotai.add(versenyzo);
+                    }
                 }
                 if (Commands.FASTEST.getValue().equals(parancs)) {
-                    //todo kiszervezni
-                    String[] splittedString = adottOlvasandoSor.trim().split(";");
-                    String pilotaTeljesneve = splittedString[1];
-                    String csapatNeve = splittedString[2];
+
+                    String pilotaTeljesneve = splitterList.get(1);
+                    String csapatNeve = splitterList.get(2);
 
                     futamLeggyorsabbja.setFullname(pilotaTeljesneve);
                     futamLeggyorsabbja.setTeamName(csapatNeve);
 
-                    adottFutam.setFastestPilot(futamLeggyorsabbja);
-                    adottIdenyFutamai.add(adottFutam);
+                    if (Validator.theFastestBelongTheResultList(pilotaTeljesneve, new ArrayList<>(adottIdenyPilotai))) {
+                        adottFutam.setFastestPilot(futamLeggyorsabbja);
+                        adottIdenyFutamai.add(adottFutam);
+                    }
                 }
                 if (Commands.FINISH.getValue().equals(parancs)) {
+
                     if (!szezonok.containsKey(adottFutamEve)) {
                         Season adottSzezon = new Season();
                         adottSzezon.setYear(adottFutamEve);

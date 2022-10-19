@@ -1,6 +1,7 @@
 package hu.pinterbeci.java.se.f1.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -12,7 +13,7 @@ public class Splitter {
         List<String> result = new ArrayList<>();
 
         if (line == null || line.isEmpty()) {
-            return new ArrayList<>();
+            return new ArrayList<>(Collections.singletonList("NEXT LINE!"));
         }
         try {
             Collections.addAll(result, line.trim().split(regex));
