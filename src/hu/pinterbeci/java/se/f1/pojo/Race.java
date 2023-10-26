@@ -1,8 +1,6 @@
 package hu.pinterbeci.java.se.f1.pojo;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Race {
@@ -11,10 +9,10 @@ public class Race {
     private int number;
     private float odds;
     private Pilot fastestPilot;
-    private Set<Pilot> pilotList;
+    private Set<Pilot> resultList;
 
     public Race() {
-        this.pilotList = new HashSet<>();
+        this.resultList = new HashSet<>();
     }
 
     public Integer getYear() {
@@ -57,12 +55,12 @@ public class Race {
         this.fastestPilot = fastestPilot;
     }
 
-    public Set<Pilot> getPilotList() {
-        return pilotList;
+    public Set<Pilot> getResultList() {
+        return resultList;
     }
 
-    public void setPilotList(Set<Pilot> pilotList) {
-        this.pilotList = pilotList;
+    public void setResultList(Set<Pilot> resultList) {
+        this.resultList = resultList;
     }
 
 }

@@ -71,7 +71,9 @@ public class F1DBService {
                                     pilot.setFullname(splitResultLineArray[2]);
                                     pilot.setTeamName(splitResultLineArray[3]);
 
+
                                     Integer currentPilotCurrentPosition = Integer.parseInt(splitResultLineArray[1]);
+                                    pilot.setCurrentRacePosition(currentPilotCurrentPosition);
                                     currentPilotStanding = new Standing();
                                     if (!pilotsStandingsPerYear.containsKey(race.getYear())) {
                                         standingMap = new HashMap<>();
@@ -103,7 +105,7 @@ public class F1DBService {
                                             pilotsStandingsPerYear.put(race.getYear(), standingMap);
                                         }
                                     }
-                                    race.getPilotList().add(pilot);
+                                    race.getResultList().add(pilot);
                                 }
                             }
                         }
@@ -112,8 +114,22 @@ public class F1DBService {
 
                 } else if (line.startsWith(Commands.QUERY.getValue())) {
 
+                    String[] splitQueryLineArray = line.split(";");
+                    if (splitQueryLineArray.length > 0) {
+                        int queryYear;
+                        int raceNumber;
+                        if (splitQueryLineArray.length == 2) {
+                            queryYear = Integer.parseInt(splitRaceLineArray[1]);
+                        } else if (splitQueryLineArray.length == 3) {
+                            queryYear = Integer.parseInt(splitRaceLineArray[1]);
+                            raceNumber = Integer.parseInt(splitRaceLineArray[2]);
+                        }
+                    }
                 } else if (line.startsWith(Commands.POINT.getValue())) {
-
+                    String[] splitPointLineArray = line.split(";");
+                    if (splitPointLineArray.length == 2) {
+                        String typeOfPointing = splitPointLineArray[1];
+                    }
                 } else if (line.startsWith(Commands.EXIT.getValue())) {
                     break;
                 }

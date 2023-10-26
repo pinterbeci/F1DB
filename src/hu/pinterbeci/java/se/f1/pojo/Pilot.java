@@ -1,21 +1,17 @@
 package hu.pinterbeci.java.se.f1.pojo;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Pilot {
     private String fullname;
     private String teamName;
-    private Map<Integer, Integer> positionList;
+    private int currentRacePosition;
+    private int point;
 
     public Pilot() {
-        this.positionList = new HashMap<>();
     }
 
     public Pilot(String fullname, String teamName) {
         this.fullname = fullname;
         this.teamName = teamName;
-        this.positionList = new HashMap<>();
     }
 
     public String getFullname() {
@@ -34,11 +30,19 @@ public class Pilot {
         this.teamName = teamName;
     }
 
-    public Map<Integer, Integer> getPositionList() {
-        return positionList;
+    public int getCurrentRacePosition() {
+        return currentRacePosition;
     }
 
-    public void setPositionList(Map<Integer, Integer> positionList) {
-        this.positionList = positionList;
+    public void setCurrentRacePosition(int currentRacePosition) {
+        this.currentRacePosition = currentRacePosition;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
     }
 }
