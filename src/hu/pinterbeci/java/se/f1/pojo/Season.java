@@ -1,17 +1,15 @@
 package hu.pinterbeci.java.se.f1.pojo;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Season {
-    /**
-     * "id"-ként fogom használni, mely alapján különítem el az idényeket.
-     */
     private int year;
+    private List<Race> races;
 
-    private Set<Pilot> pilotsOfThisSeason;
-
-    private Set<Race> racesOfSeason;
-
+    public Season() {
+        this.races = new ArrayList<>();
+    }
 
     public int getYear() {
         return year;
@@ -21,19 +19,11 @@ public class Season {
         this.year = year;
     }
 
-    public Set<Pilot> getPilotsOfThisSeason() {
-        return pilotsOfThisSeason;
+    public List<Race> getRaces() {
+        return races;
     }
 
-    public void setPilotsOfThisSeason(Set<Pilot> pilotsOfThisSeason) {
-        this.pilotsOfThisSeason = pilotsOfThisSeason;
-    }
-
-    public Set<Race> getRacesOfSeason() {
-        return racesOfSeason;
-    }
-
-    public void setRacesOfSeason(Set<Race> racesOfSeason) {
-        this.racesOfSeason = racesOfSeason;
+    public void setRaces(List<Race> races) {
+        this.races = races;
     }
 }

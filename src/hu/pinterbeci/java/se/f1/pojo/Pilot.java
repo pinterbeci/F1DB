@@ -1,12 +1,22 @@
 package hu.pinterbeci.java.se.f1.pojo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Pilot {
-
     private String fullname;
-
     private String teamName;
+    private Map<Integer, Integer> positionList;
 
-    private float points;
+    public Pilot() {
+        this.positionList = new HashMap<>();
+    }
+
+    public Pilot(String fullname, String teamName) {
+        this.fullname = fullname;
+        this.teamName = teamName;
+        this.positionList = new HashMap<>();
+    }
 
     public String getFullname() {
         return fullname;
@@ -24,23 +34,11 @@ public class Pilot {
         this.teamName = teamName;
     }
 
-    public float getPoints() {
-        return points;
+    public Map<Integer, Integer> getPositionList() {
+        return positionList;
     }
 
-    public void setPoints(float points) {
-        this.points = points;
+    public void setPositionList(Map<Integer, Integer> positionList) {
+        this.positionList = positionList;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof Pilot) {
-            return this.fullname.equals(((Pilot) o).fullname) && this.teamName.equals(((Pilot) o).teamName);
-        }
-        return false;
-    }
-
-
-
-
 }

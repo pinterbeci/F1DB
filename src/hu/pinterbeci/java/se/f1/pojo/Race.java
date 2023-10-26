@@ -1,30 +1,44 @@
 package hu.pinterbeci.java.se.f1.pojo;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class Race {
-
-    private String gpName;
-
-    private int numberOfCurrentGP;
-
+    private Integer year;
+    private String name;
+    private int number;
     private float odds;
-
     private Pilot fastestPilot;
+    private Set<Pilot> pilotList;
 
-
-    public String getGpName() {
-        return gpName;
+    public Race() {
+        this.pilotList = new HashSet<>();
     }
 
-    public void setGpName(String gpName) {
-        this.gpName = gpName;
+    public Integer getYear() {
+        return year;
     }
 
-    public int getNumberOfCurrentGP() {
-        return numberOfCurrentGP;
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
-    public void setNumberOfCurrentGP(int numberOfCurrentGP) {
-        this.numberOfCurrentGP = numberOfCurrentGP;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     public float getOdds() {
@@ -43,14 +57,12 @@ public class Race {
         this.fastestPilot = fastestPilot;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public Set<Pilot> getPilotList() {
+        return pilotList;
+    }
 
-        if (o instanceof Race) {
-            return this.gpName.equals(((Race) o).gpName) && this.numberOfCurrentGP == ((Race) o).numberOfCurrentGP;
-
-        }
-        return false;
+    public void setPilotList(Set<Pilot> pilotList) {
+        this.pilotList = pilotList;
     }
 
 }
