@@ -1,0 +1,71 @@
+RACE: egy verseny bevitele következik.
+
+    Ellenőrzések:
+
+    - Argumentumai: évszám, nagydíj neve (pl. Italian Grand Prix), hányadik verseny az adott évben, pont
+      szorzó. 4 argumentum (!!!!)
+
+    - A pont szorzó értéke lehet: 0, 1, 0.5 és 2. A megszerezhető pontszámot meg kell szorozni ezzel az
+      értékkel a világbajnokság eredményének számításakor.
+
+    - (!!!) Ezután a parancs után kizárólag RESULT, FASTEST és FINISH parancsokat lehet kiadni.
+
+    Ha valamelyik nem teljesül, akkor azt jelezni szükséges.
+________________________________________________________________________________________________________________________
+RESULT: a legutóbbi RACE parancs után kiadva egy versenyző eredményeit lehet bevinni a RACE-hez
+        tartozó versenyhez.
+
+        Ellenőrzések:
+
+         - Argumentumai: célba érési pozíció, versenyző neve, csapat neve. 3 argumentum (!!!!)
+
+        - Csak RACE és FINISH parancs között lehet kiadni.
+________________________________________________________________________________________________________________________
+FASTEST: a legutóbbi RACE parancs után kiadva a leggyorsabb kör tulajdonosát lehet bevinni a RACE-hez tartozó versenyhez.
+
+          Ellenőrzések:
+           - Argumentumai: versenyző neve, csapat neve. 2 argumentum (!!!!)
+
+           - Csak RACE és FINISH parancs között lehet kiadni.
+________________________________________________________________________________________________________________________
+FINISH: a verseny bevitele véget ért.
+
+        Ellenőrzések:
+
+         - Nincsenek argumentumai.
+
+          - Csak RACE parancs után lehet kiadni, ha azóta nem volt FINISH parancs, és legalább 10 RESULT parancs
+            került kiadásra.
+________________________________________________________________________________________________________________________
+QUERY: lekérdezés fog következni egy adott évre vonatkozóan. Kétféle módon működik: az elsőben az
+        adott év végeredményét, a második esetben az adott verseny befejeztét követő állást jeleníti meg.
+
+       Ellenőrzések:
+
+        - Argumentumai 1: évszám.
+        - Argumentumai 2: évszám, hányadik verseny.
+
+        - Ezután a parancs után kizárólag POINT parancsot lehet kiadni.
+________________________________________________________________________________________________________________________
+POINT: a legutóbbi QUERY parancs után kiadva beállításra kerül, hogy a lekérdezésnél milyen
+       pontszámítás történjen, ezután a lekérdezés végrehajtásra kerül.
+
+       Ellenőrzések:
+
+       - Argumentumai: pontszámítási módszer.
+
+       - Pontszámítási módszer lehetséges értékei: CLASSIC, MODERN, NEW, PRESENT
+
+            * CLASSIC pontozás: 10, 6, 4, 3, 2, 1 pontot kap az első 6 helyezett ilyen sorrendben.
+
+            * MODERN pontozás: 10, 8, 6, 5, 4, 3, 2, 1 pontot kap az első 8 helyezett ilyen sorrendben.
+
+            * NEW pontozás: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 pontot kap az első 10 helyezett ilyen sorrendben.
+
+            * PRESENT pontozás: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1 pontot kap az első 10 helyezett ilyen sorrendben, a
+                      leggyorsabb kört futó pilóta szintén 1 plusz pontot kap, amennyiben az első 10 között végzett.
+
+       - Csak QUERY parancs után lehet kiadni, ha azóta nem volt hozzátartozó POINT parancs.
+
+
+

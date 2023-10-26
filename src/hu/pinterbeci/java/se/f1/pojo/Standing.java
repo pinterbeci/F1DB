@@ -1,6 +1,5 @@
 package hu.pinterbeci.java.se.f1.pojo;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Standing {

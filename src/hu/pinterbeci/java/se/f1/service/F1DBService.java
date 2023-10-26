@@ -15,6 +15,13 @@ import java.util.Map;
 
 public class F1DBService {
 
+    //lényegében a menteni kívánt, és feldolgozásra szoruló adatokat ebben az eljárásban mentem
+    // todo
+    //  ellenőrzék hiányoznak, így azok abszolválni kell (parancsok kiadásának megfelelő sorrendje az elsődleges)
+    //  megfelelő módon kell közölni a hibaüzenetek, olvashatóan és érthetően
+    //  a különböző parancsokat érdemes lehet kiszervezni külön-külön eljárásokba (ez már csak szépségiszint növelése miatt esedékes)
+    //  fő a megfelelő működés
+
     public void readAndProcessData(final InputStream inputStream) {
         try (BufferedReader br
                      = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -44,6 +51,8 @@ public class F1DBService {
                     }
                     while (!line.equals(Commands.FINISH.getValue())) {
 
+                        //miután kaptam egy 'FASTEST' parancsot, így az adott verseny végeredményét mentem le egy
+                        // 'seasonsDataMap'-nek elnevezett Map-be, amely idényenként összegzi az összes végeredményt
                         if (line.startsWith(Commands.FASTEST.getValue())) {
                             String[] splitFastestLineArray = line.split(";");
                             if (splitFastestLineArray.length == 3 && race != null) {
@@ -63,6 +72,9 @@ public class F1DBService {
                             }
                         } else {
 
+                            //ahogy érkeznek be az eredmények, annak sorrendjében külön mentem azokat
+                            // a 'pilotsStandingsPerYear' Map-be, ami tartalmazza idényenkénti piloták listáját,
+                            // illetve azt, hogy az adott idényben milyen eredményeket értek el
                             if (line.startsWith(Commands.RESULT.getValue())) {
                                 String[] splitResultLineArray = line.split(";");
 
@@ -71,9 +83,9 @@ public class F1DBService {
                                     pilot.setFullname(splitResultLineArray[2]);
                                     pilot.setTeamName(splitResultLineArray[3]);
 
-
                                     Integer currentPilotCurrentPosition = Integer.parseInt(splitResultLineArray[1]);
                                     pilot.setCurrentRacePosition(currentPilotCurrentPosition);
+
                                     currentPilotStanding = new Standing();
                                     if (!pilotsStandingsPerYear.containsKey(race.getYear())) {
                                         standingMap = new HashMap<>();
