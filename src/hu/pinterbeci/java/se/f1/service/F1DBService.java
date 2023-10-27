@@ -37,6 +37,7 @@ public class F1DBService {
                 if (line.startsWith(Commands.RACE.getValue())) {
                     if (splitRaceLineArray.length == 5) {
                         if (Commands.RACE.getValue().equals(splitRaceLineArray[0])) {
+
                             race = new Race();
                             race.setYear(Integer.parseInt(splitRaceLineArray[1]));
                             race.setName(splitRaceLineArray[2]);
@@ -47,11 +48,13 @@ public class F1DBService {
                             line = br.readLine();
                         }
                     }
+                    List<String> allowedCommands = Arrays.asList(Commands.RESULT.getValue(), Commands.FINISH.getValue(), Commands.FASTEST.getValue());
                     while (!line.equals(Commands.FINISH.getValue())) {
 
                         //miután kaptam egy 'FASTEST' parancsot, így az adott verseny végeredményét mentem le egy
                         // 'seasonsDataMap'-nek elnevezett Map-be, amely idényenként összegzi az összes végeredményt
                         if (line.startsWith(Commands.FASTEST.getValue())) {
+
                             String[] splitFastestLineArray = line.split(";");
                             if (splitFastestLineArray.length == 3 && race != null) {
                                 race.setFastestPilot(new Pilot(splitFastestLineArray[1], splitFastestLineArray[2]));
@@ -68,73 +71,64 @@ public class F1DBService {
                                     seasonsDataMap.put(race.getYear(), races);
                                 }
                             }
-                        } else {
+                        }
+                        if (line.startsWith(Commands.RESULT.getValue())) {
 
-                            //ahogy érkeznek be az eredmények, annak sorrendjében külön mentem azokat
-                            // a 'pilotsStandingsPerYear' Map-be, ami tartalmazza idényenkénti piloták listáját,
-                            // illetve azt, hogy az adott idényben milyen eredményeket értek el
-                            if (line.startsWith(Commands.RESULT.getValue())) {
-                                String[] splitResultLineArray = line.split(";");
+                            String[] splitResultLineArray = line.split(";");
 
-                                if (splitResultLineArray.length == 4 && race != null) {
-                                    Pilot pilot = new Pilot();
-                                    pilot.setFullname(splitResultLineArray[2]);
-                                    pilot.setTeamName(splitResultLineArray[3]);
+                            if (splitResultLineArray.length == 4 && race != null) {
+                                Pilot pilot = new Pilot();
+                                pilot.setFullname(splitResultLineArray[2]);
+                                pilot.setTeamName(splitResultLineArray[3]);
 
-                                    Integer currentPilotCurrentPosition = Integer.parseInt(splitResultLineArray[1]);
-                                    pilot.setCurrentRacePosition(currentPilotCurrentPosition);
+                                Integer currentPilotCurrentPosition = Integer.parseInt(splitResultLineArray[1]);
+                                pilot.setCurrentRacePosition(currentPilotCurrentPosition);
 
-                                    currentPilotStanding = new Standing();
-                                    if (!pilotsStandingsPerYear.containsKey(race.getYear())) {
-                                        standingMap = new HashMap<>();
+                                currentPilotStanding = new Standing();
+                                if (!pilotsStandingsPerYear.containsKey(race.getYear())) {
+                                    standingMap = new HashMap<>();
 
-                                        Map<Integer, Integer> positionCnt = new HashMap<>();
-                                        positionCnt.put(currentPilotCurrentPosition, 1);
-                                        currentPilotStanding.setPositionWithCntOfPosition(positionCnt);
-                                        standingMap.put(pilot.getFullname(), currentPilotStanding);
+                                    Map<Integer, Integer> positionCnt = new HashMap<>();
+                                    positionCnt.put(currentPilotCurrentPosition, 1);
+                                    currentPilotStanding.setPositionWithCntOfPosition(positionCnt);
+                                    standingMap.put(pilot.getFullname(), currentPilotStanding);
 
-                                        pilotsStandingsPerYear.put(race.getYear(), standingMap);
+                                    pilotsStandingsPerYear.put(race.getYear(), standingMap);
+                                } else {
+                                    Map<String, Standing> currentYearSavedStandingData = pilotsStandingsPerYear.get(race.getYear());
+                                    if (!currentYearSavedStandingData.containsKey(pilot.getFullname())) {
+
+                                        Map<Integer, Integer> currentPilotNewPositionData = new HashMap<>();
+                                        currentPilotNewPositionData.put(currentPilotCurrentPosition, 1);
+                                        currentPilotStanding.setPositionWithCntOfPosition(currentPilotNewPositionData);
+
+                                        currentYearSavedStandingData.put(pilot.getFullname(), currentPilotStanding);
+                                        pilotsStandingsPerYear.put(race.getYear(), currentYearSavedStandingData);
                                     } else {
-                                        Map<String, Standing> currentYearSavedStandingData = pilotsStandingsPerYear.get(race.getYear());
-                                        if (!currentYearSavedStandingData.containsKey(pilot.getFullname())) {
+                                        currentPilotStanding = currentYearSavedStandingData.get(pilot.getFullname());
+                                        Integer currentPositionCnt = currentPilotStanding.getPositionWithCntOfPosition().get(currentPilotCurrentPosition) == null ? 0
+                                                : currentPilotStanding.getPositionWithCntOfPosition().get(currentPilotCurrentPosition);
+                                        currentPositionCnt++;
 
-                                            Map<Integer, Integer> currentPilotNewPositionData = new HashMap<>();
-                                            currentPilotNewPositionData.put(currentPilotCurrentPosition, 1);
-                                            currentPilotStanding.setPositionWithCntOfPosition(currentPilotNewPositionData);
-
-                                            currentYearSavedStandingData.put(pilot.getFullname(), currentPilotStanding);
-                                            pilotsStandingsPerYear.put(race.getYear(), currentYearSavedStandingData);
-                                        } else {
-                                            currentPilotStanding = currentYearSavedStandingData.get(pilot.getFullname());
-                                            Integer currentPositionCnt = currentPilotStanding.getPositionWithCntOfPosition().get(currentPilotCurrentPosition) == null ? 0
-                                                    : currentPilotStanding.getPositionWithCntOfPosition().get(currentPilotCurrentPosition);
-                                            currentPositionCnt++;
-
-                                            currentPilotStanding.getPositionWithCntOfPosition().put(currentPilotCurrentPosition, currentPositionCnt);
-                                            standingMap.put(pilot.getFullname(), currentPilotStanding);
-                                            pilotsStandingsPerYear.put(race.getYear(), standingMap);
-                                        }
+                                        currentPilotStanding.getPositionWithCntOfPosition().put(currentPilotCurrentPosition, currentPositionCnt);
+                                        standingMap.put(pilot.getFullname(), currentPilotStanding);
+                                        pilotsStandingsPerYear.put(race.getYear(), standingMap);
                                     }
-                                    race.getResultList().add(pilot);
                                 }
+                                race.getResultList().add(pilot);
                             }
                         }
-                        line = br.readLine();
-                    }
 
+                        line = br.readLine();
+
+                        if (!checkCommandFitIn(allowedCommands, line)) {
+                            System.out.println("Nem megfelelő parancs történt! Az oka: 'RESULT' parancsot csakis 'RACE és 'FINISH' parancs között szabad kiadni!");
+                            break;
+                        }
+
+                    }
                 } else if (line.startsWith(Commands.QUERY.getValue())) {
 
-                    String[] splitQueryLineArray = line.split(";");
-                    if (splitQueryLineArray.length > 0) {
-                        int queryYear;
-                        int raceNumber;
-                        if (splitQueryLineArray.length == 2) {
-                            queryYear = Integer.parseInt(splitRaceLineArray[1]);
-                        } else if (splitQueryLineArray.length == 3) {
-                            queryYear = Integer.parseInt(splitRaceLineArray[1]);
-                            raceNumber = Integer.parseInt(splitRaceLineArray[2]);
-                        }
-                    }
                 } else if (line.startsWith(Commands.POINT.getValue())) {
                     String[] splitPointLineArray = line.split(";");
                     if (splitPointLineArray.length == 2) {
@@ -142,13 +136,21 @@ public class F1DBService {
                     }
                 } else if (line.startsWith(Commands.EXIT.getValue())) {
                     //próba vb számítás
-                    pilotsRatingEndOfSeason(seasonsDataMap, 2020, 8, PointingMethod.PRESENT);
+                    pilotsRatingEndOfSeason(seasonsDataMap, 2018, 8, PointingMethod.PRESENT);
                     break;
                 }
             }
         } catch (final Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    private boolean checkCommandFitIn(final List<String> allowedCommands, final String line) {
+        String[] splitLineArray = line.split(";");
+        if (splitLineArray.length < 1)
+            return false;
+
+        return allowedCommands.contains(splitLineArray[0]);
     }
 
 
@@ -168,18 +170,22 @@ public class F1DBService {
         final List<Race> querySeason = seasonsDataMap.get(queryYear);
         final List<Integer> pointingMethodPointList = getPointingMethodPointList(pointingMethod);
         final boolean plusPoint = isPlusPoint(pointingMethod);
-        final boolean queryPartOfTheSeason = queryRaceNumber != null && queryRaceNumber < seasonsDataMap.size();
+        final boolean queryPartOfTheSeason = queryRaceNumber != null && queryRaceNumber < querySeason.size();
         Integer pointByPointMethod;
 
         for (Race currentRaceOfSeason : querySeason) {
             for (Pilot currentPilot : currentRaceOfSeason.getResultList()) {
                 Integer reachedPointOfPilot;
-
                 if (!result.containsKey(currentPilot.getFullname())) {
                     reachedPointOfPilot = 0;
 
                     if (pointingMethodPointList.size() >= currentPilot.getCurrentRacePosition()) {
                         reachedPointOfPilot = pointingMethodPointList.get(currentPilot.getCurrentRacePosition() - 1);
+
+                        //todo
+                        //  A pont szorzó értéke --> A megszerezhető pontszámot meg kell szorozni ezzel az
+                        //   értékkel a világbajnokság eredményének számításakor.
+                        // reachedPointOfPilot *= (int)currentRaceOfSeason.getOdds();
                     }
                 } else {
                     reachedPointOfPilot = result.get(currentPilot.getFullname());
@@ -189,12 +195,15 @@ public class F1DBService {
                         pointByPointMethod = pointingMethodPointList.get(currentPilot.getCurrentRacePosition() - 1);
                     }
                     reachedPointOfPilot += pointByPointMethod;
+                    //todo
+                    //  A pont szorzó értéke --> A megszerezhető pontszámot meg kell szorozni ezzel az
+                    //  értékkel a világbajnokság eredményének számításakor.
+                    //  reachedPointOfPilot *= (int)currentRaceOfSeason.getOdds();
                 }
 
                 if (plusPoint) {
                     if (currentRaceOfSeason.getFastestPilot().getFullname().equals(currentPilot.getFullname())) {
                         reachedPointOfPilot = result.get(currentPilot.getFullname());
-                        //abban az esetben, ha a leggyorsabb kört futó pilóta még nem szerepelne a 'result'-ban
                         if (reachedPointOfPilot == null) {
                             reachedPointOfPilot = 0;
                         } else {
