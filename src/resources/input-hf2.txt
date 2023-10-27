@@ -5,16 +5,21 @@ RESULT;3;Jarno Trulli;Toyota
 RESULT;4;Timo Glock;Toyota
 RESULT;5;Fernando Alonso;Renault
 RESULT;6;Nico Rosberg;Williams
+RESULT;7;Sébastien Buemi;Toro Rosso
+RESULT;8;Sébastien Bourdais;Toro Rosso
+RESULT;9;Adrian Sutil;Force India
+RESULT;10;Nick Heidfeld;BMW Sauber
+RESULT;11;Giancarlo Fisichella;Force India
+RESULT;12;Mark Webber;Red Bull
+RESULT;13;Sebastian Vettel;Red Bull
+RESULT;14;Robert Kubica;BMW Sauber
+RESULT;15;Kimi Räikkönen;Ferrari
+RESULT;16;Felipe Massa;Ferrari
+RESULT;17;Nelson Piquet Jr.;Renault
+RESULT;18;Kazuki Nakajima;Williams
+RESULT;19;Heikki Kovalainen;McLaren
+RESULT;20;Lewis Hamilton;McLaren
 FASTEST;Nico Rosberg;Williams
-FINISH
-RACE;2009;Malaysian Grand Prix;2;0.5
-RESULT;1;Jenson Button;Brawn
-RESULT;2;Nick Heidfeld;BMW Sauber
-RESULT;3;Timo Glock;Toyota
-RESULT;4;Jarno Trulli;Toyota
-RESULT;5;Rubens Barrichello;Brawn
-RESULT;6;Mark Webber;Red Bull
-FASTEST;Jenson Button;Brawn
 FINISH
 
 EXIT

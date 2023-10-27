@@ -1,6 +1,7 @@
 package hu.pinterbeci.java.se.f1.service;
 
 import hu.pinterbeci.java.se.f1.enums.Commands;
+import hu.pinterbeci.java.se.f1.enums.PointingMethod;
 import hu.pinterbeci.java.se.f1.pojo.Pilot;
 import hu.pinterbeci.java.se.f1.pojo.Race;
 import hu.pinterbeci.java.se.f1.pojo.Standing;
@@ -8,10 +9,8 @@ import hu.pinterbeci.java.se.f1.pojo.Standing;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class F1DBService {
 
@@ -25,7 +24,6 @@ public class F1DBService {
     public void readAndProcessData(final InputStream inputStream) {
         try (BufferedReader br
                      = new BufferedReader(new InputStreamReader(inputStream))) {
-
             Map<Integer, List<Race>> seasonsDataMap = new HashMap<>();
             Map<Integer, Map<String, Standing>> pilotsStandingsPerYear = new HashMap<>();
             Map<String, Standing> standingMap = new HashMap<>();
@@ -143,11 +141,111 @@ public class F1DBService {
                         String typeOfPointing = splitPointLineArray[1];
                     }
                 } else if (line.startsWith(Commands.EXIT.getValue())) {
+                  //próba vb számítás
+                    pilotsRatingEndOfSeason(seasonsDataMap, 2020, 8, PointingMethod.PRESENT);
                     break;
                 }
             }
         } catch (final Exception exception) {
             exception.printStackTrace();
+        }
+    }
+
+
+    private Map<String, Integer> pilotsRatingEndOfSeason(final Map<Integer, List<Race>> seasonsDataMap, final Integer queryYear,
+                                                         final Integer queryRaceNumber, final PointingMethod pointingMethod) {
+
+        if (seasonsDataMap == null || queryYear == null) {
+            return new HashMap<>();
+        }
+
+        if (!seasonsDataMap.containsKey(queryYear)) {
+            return new HashMap<>();
+        }
+
+        final List<Race> querySeason = seasonsDataMap.get(queryYear);
+        Map<String, Integer> result = new HashMap<>();
+        List<Integer> pointingMethodPointList = getPointingMethodPointList(pointingMethod);
+        boolean plusPoint = isPlusPoint(pointingMethod);
+
+        Integer pointByPointMethod;
+
+        boolean queryPartOfTheSeason = queryRaceNumber != null && queryRaceNumber < seasonsDataMap.size();
+
+        for (Race currentRaceOfSeason : querySeason) {
+            for (Pilot currentPilot : currentRaceOfSeason.getResultList()) {
+                Integer reachedPointOfPilot;
+
+                if (!result.containsKey(currentPilot.getFullname())) {
+                    reachedPointOfPilot = 0;
+
+                    if (pointingMethodPointList.size() >= currentPilot.getCurrentRacePosition()) {
+                        reachedPointOfPilot = pointingMethodPointList.get(currentPilot.getCurrentRacePosition() - 1);
+                    }
+                    // result.put(currentPilot.getFullname(), reachedPointOfPilot);
+                } else {
+                    reachedPointOfPilot = result.get(currentPilot.getFullname());
+                    pointByPointMethod = 0;
+
+                    if (pointingMethodPointList.size() >= currentPilot.getCurrentRacePosition()) {
+                        pointByPointMethod = pointingMethodPointList.get(currentPilot.getCurrentRacePosition() - 1);
+                    }
+                    reachedPointOfPilot += pointByPointMethod;
+                    //result.put(currentPilot.getFullname(), reachedPointOfPilot);
+                }
+
+                if (plusPoint) {
+                    if (currentRaceOfSeason.getFastestPilot().getFullname().equals(currentPilot.getFullname())) {
+                        reachedPointOfPilot = result.get(currentPilot.getFullname());
+                        //abban az esetben, ha a leggyorsabb kört futó pilóta még nem szerepelne a 'result'-ban
+                        if (reachedPointOfPilot == null) {
+                            reachedPointOfPilot = 0;
+                        } else {
+                            reachedPointOfPilot++;
+                        }
+                    }
+                }
+                result.put(currentPilot.getFullname(), reachedPointOfPilot);
+            }
+            if (queryPartOfTheSeason) {
+                if (currentRaceOfSeason.getNumber() == queryRaceNumber) {
+                    break;
+                }
+            }
+        }
+        return result.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldvalue, newValue) ->
+                        oldvalue, LinkedHashMap::new));
+    }
+
+    private List<Integer> getPointingMethodPointList(final PointingMethod method) {
+        switch (method) {
+            case CLASSIC:
+                return PointingMethod.CLASSIC.getPointList();
+            case MODERN:
+                return PointingMethod.MODERN.getPointList();
+            case NEW:
+                return PointingMethod.NEW.getPointList();
+            case PRESENT:
+                return PointingMethod.PRESENT.getPointList();
+            default:
+                return new ArrayList<>();
+        }
+    }
+
+    private boolean isPlusPoint(final PointingMethod method) {
+        switch (method) {
+            case CLASSIC:
+                return PointingMethod.CLASSIC.isPlusPoint();
+            case MODERN:
+                return PointingMethod.MODERN.isPlusPoint();
+            case NEW:
+                return PointingMethod.NEW.isPlusPoint();
+            case PRESENT:
+                return PointingMethod.PRESENT.isPlusPoint();
+            default:
+                return false;
         }
     }
 }
