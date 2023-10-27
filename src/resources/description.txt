@@ -34,6 +34,7 @@ FINISH: a verseny bevitele véget ért.
 
          - Nincsenek argumentumai.
 
+            EZ NEM EGYÉRTELMŰ
           - Csak RACE parancs után lehet kiadni, ha azóta nem volt FINISH parancs, és legalább 10 RESULT parancs
             került kiadásra.
 ________________________________________________________________________________________________________________________
