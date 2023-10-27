@@ -141,7 +141,7 @@ public class F1DBService {
                         String typeOfPointing = splitPointLineArray[1];
                     }
                 } else if (line.startsWith(Commands.EXIT.getValue())) {
-                  //próba vb számítás
+                    //próba vb számítás
                     pilotsRatingEndOfSeason(seasonsDataMap, 2020, 8, PointingMethod.PRESENT);
                     break;
                 }
@@ -155,6 +155,8 @@ public class F1DBService {
     private Map<String, Integer> pilotsRatingEndOfSeason(final Map<Integer, List<Race>> seasonsDataMap, final Integer queryYear,
                                                          final Integer queryRaceNumber, final PointingMethod pointingMethod) {
 
+        Map<String, Integer> result = new HashMap<>();
+
         if (seasonsDataMap == null || queryYear == null) {
             return new HashMap<>();
         }
@@ -164,13 +166,10 @@ public class F1DBService {
         }
 
         final List<Race> querySeason = seasonsDataMap.get(queryYear);
-        Map<String, Integer> result = new HashMap<>();
-        List<Integer> pointingMethodPointList = getPointingMethodPointList(pointingMethod);
-        boolean plusPoint = isPlusPoint(pointingMethod);
-
+        final List<Integer> pointingMethodPointList = getPointingMethodPointList(pointingMethod);
+        final boolean plusPoint = isPlusPoint(pointingMethod);
+        final boolean queryPartOfTheSeason = queryRaceNumber != null && queryRaceNumber < seasonsDataMap.size();
         Integer pointByPointMethod;
-
-        boolean queryPartOfTheSeason = queryRaceNumber != null && queryRaceNumber < seasonsDataMap.size();
 
         for (Race currentRaceOfSeason : querySeason) {
             for (Pilot currentPilot : currentRaceOfSeason.getResultList()) {
@@ -182,7 +181,6 @@ public class F1DBService {
                     if (pointingMethodPointList.size() >= currentPilot.getCurrentRacePosition()) {
                         reachedPointOfPilot = pointingMethodPointList.get(currentPilot.getCurrentRacePosition() - 1);
                     }
-                    // result.put(currentPilot.getFullname(), reachedPointOfPilot);
                 } else {
                     reachedPointOfPilot = result.get(currentPilot.getFullname());
                     pointByPointMethod = 0;
@@ -191,7 +189,6 @@ public class F1DBService {
                         pointByPointMethod = pointingMethodPointList.get(currentPilot.getCurrentRacePosition() - 1);
                     }
                     reachedPointOfPilot += pointByPointMethod;
-                    //result.put(currentPilot.getFullname(), reachedPointOfPilot);
                 }
 
                 if (plusPoint) {
@@ -215,8 +212,8 @@ public class F1DBService {
         }
         return result.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldvalue, newValue) ->
-                        oldvalue, LinkedHashMap::new));
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) ->
+                        oldValue, LinkedHashMap::new));
     }
 
     private List<Integer> getPointingMethodPointList(final PointingMethod method) {
