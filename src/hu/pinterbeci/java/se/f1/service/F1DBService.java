@@ -30,6 +30,9 @@ public class F1DBService {
             Standing currentPilotStanding;
 
             String line;
+            boolean isStartedRace = false;
+            boolean isFinishedRace = false;
+
             while ((line = br.readLine()) != null) {
                 Race race = null;
                 String[] splitRaceLineArray = line.split(";");
@@ -37,7 +40,7 @@ public class F1DBService {
                 if (line.startsWith(Commands.RACE.getValue())) {
                     if (splitRaceLineArray.length == 5) {
                         if (Commands.RACE.getValue().equals(splitRaceLineArray[0])) {
-
+                            isStartedRace = true;
                             race = new Race();
                             race.setYear(Integer.parseInt(splitRaceLineArray[1]));
                             race.setName(splitRaceLineArray[2]);
@@ -126,6 +129,11 @@ public class F1DBService {
                             break;
                         }
 
+                        if (line.startsWith(Commands.FINISH.getValue())) {
+                            //volt race parancs már
+                            //ha még nem volt finish és legalább 10 result parancs volt
+                        }
+
                     }
                 } else if (line.startsWith(Commands.QUERY.getValue())) {
 
@@ -149,7 +157,6 @@ public class F1DBService {
         String[] splitLineArray = line.split(";");
         if (splitLineArray.length < 1)
             return false;
-
         return allowedCommands.contains(splitLineArray[0]);
     }
 

@@ -1,0 +1,4 @@
+- kész van az összes adat mentése
+ viszont validációk hiányoznak
+ és releváns teszt
+ tehát cél lenne a JUnit tesztelés, ha fluid módon működik a program
